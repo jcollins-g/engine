@@ -209,7 +209,6 @@ if (enable_unittests) {
       "//flutter/fml/dart",
       "//flutter/lib/ui:ui",
       "//flutter/shell",
-      "//flutter/testing",
       "//flutter/testing:dart",
     ]
 
@@ -279,7 +278,6 @@ if (enable_unittests) {
     deps = [
       ":shell_unittests_fixtures",
       "//flutter/benchmarking",
-      "//flutter/testing:dart",
       "//flutter/testing:testing_lib",
     ]
   }

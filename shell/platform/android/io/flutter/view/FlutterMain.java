@@ -6,16 +6,12 @@ package io.flutter.view;
 
 import android.content.Context;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import io.flutter.embedding.engine.loader.FlutterLoader;
 
-/**
- * A legacy class to initialize the Flutter engine.
- *
- * <p>Replaced by {@link io.flutter.embedding.engine.loader.FlutterLoader}.
- */
+/** A class to intialize the Flutter engine. */
 public class FlutterMain {
 
   public static class Settings {

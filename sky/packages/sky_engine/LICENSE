@@ -515,6 +515,7 @@ boringssl
 engine
 etc1
 observatory_pub_packages
+skia
 txt
 vulkan
 wuffs

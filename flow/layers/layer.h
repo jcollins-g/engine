@@ -84,7 +84,7 @@ class Layer {
   // destruction.
   class AutoPrerollSaveLayerState {
    public:
-    [[nodiscard]] static AutoPrerollSaveLayerState Create(
+    FML_WARN_UNUSED_RESULT static AutoPrerollSaveLayerState Create(
         PrerollContext* preroll_context,
         bool save_layer_is_active = true,
         bool layer_itself_performs_readback = false);
@@ -133,11 +133,12 @@ class Layer {
   // draws a checkerboard over the layer if that is enabled in the PaintContext.
   class AutoSaveLayer {
    public:
-    [[nodiscard]] static AutoSaveLayer Create(const PaintContext& paint_context,
-                                              const SkRect& bounds,
-                                              const SkPaint* paint);
+    FML_WARN_UNUSED_RESULT static AutoSaveLayer Create(
+        const PaintContext& paint_context,
+        const SkRect& bounds,
+        const SkPaint* paint);
 
-    [[nodiscard]] static AutoSaveLayer Create(
+    FML_WARN_UNUSED_RESULT static AutoSaveLayer Create(
         const PaintContext& paint_context,
         const SkCanvas::SaveLayerRec& layer_rec);
 

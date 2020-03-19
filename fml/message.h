@@ -87,7 +87,7 @@ class Message {
 
   template <typename T,
             typename = std::enable_if_t<std::is_trivially_copyable<T>::value>>
-  [[nodiscard]] bool Encode(const T& value) {
+  FML_WARN_UNUSED_RESULT bool Encode(const T& value) {
     if (auto* buffer = PrepareEncode(sizeof(T))) {
       ::memcpy(buffer, &value, sizeof(T));
       return true;
@@ -95,7 +95,7 @@ class Message {
     return false;
   }
 
-  [[nodiscard]] bool Encode(const MessageSerializable& value) {
+  FML_WARN_UNUSED_RESULT bool Encode(const MessageSerializable& value) {
     return value.Serialize(*this);
   }
 
@@ -103,7 +103,7 @@ class Message {
             typename T,
             typename = std::enable_if_t<
                 std::is_base_of<MessageSerializable, T>::value>>
-  [[nodiscard]] bool Encode(const std::unique_ptr<T>& value) {
+  FML_WARN_UNUSED_RESULT bool Encode(const std::unique_ptr<T>& value) {
     // Encode if null.
     if (!Encode(static_cast<bool>(value))) {
       return false;
@@ -130,7 +130,7 @@ class Message {
 
   template <typename T,
             typename = std::enable_if_t<std::is_trivially_copyable<T>::value>>
-  [[nodiscard]] bool Decode(T& value) {
+  FML_WARN_UNUSED_RESULT bool Decode(T& value) {
     if (auto* buffer = PrepareDecode(sizeof(T))) {
       ::memcpy(&value, buffer, sizeof(T));
       return true;
@@ -138,7 +138,7 @@ class Message {
     return false;
   }
 
-  [[nodiscard]] bool Decode(MessageSerializable& value) {
+  FML_WARN_UNUSED_RESULT bool Decode(MessageSerializable& value) {
     return value.Deserialize(*this);
   }
 
@@ -146,7 +146,7 @@ class Message {
             typename T,
             typename = std::enable_if_t<
                 std::is_base_of<MessageSerializable, T>::value>>
-  [[nodiscard]] bool Decode(std::unique_ptr<T>& value) {
+  FML_WARN_UNUSED_RESULT bool Decode(std::unique_ptr<T>& value) {
     // Decode if null.
     bool is_null = false;
     if (!Decode(is_null)) {
@@ -184,13 +184,17 @@ class Message {
   size_t data_length_ = 0;
   size_t size_read_ = 0;
 
-  [[nodiscard]] bool Reserve(size_t size);
+  FML_WARN_UNUSED_RESULT
+  bool Reserve(size_t size);
 
-  [[nodiscard]] bool Resize(size_t size);
+  FML_WARN_UNUSED_RESULT
+  bool Resize(size_t size);
 
-  [[nodiscard]] uint8_t* PrepareEncode(size_t size);
+  FML_WARN_UNUSED_RESULT
+  uint8_t* PrepareEncode(size_t size);
 
-  [[nodiscard]] uint8_t* PrepareDecode(size_t size);
+  FML_WARN_UNUSED_RESULT
+  uint8_t* PrepareDecode(size_t size);
 
   FML_DISALLOW_COPY_AND_ASSIGN(Message);
 };

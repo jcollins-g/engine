@@ -26,9 +26,11 @@ class VulkanBackbuffer {
 
   bool IsValid() const;
 
-  [[nodiscard]] bool WaitFences();
+  FML_WARN_UNUSED_RESULT
+  bool WaitFences();
 
-  [[nodiscard]] bool ResetFences();
+  FML_WARN_UNUSED_RESULT
+  bool ResetFences();
 
   const VulkanHandle<VkFence>& GetUsageFence() const;
 

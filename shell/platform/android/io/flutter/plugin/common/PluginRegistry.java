@@ -24,9 +24,6 @@ import io.flutter.view.TextureRegistry;
  * registrant class is, again by default, called from the application's main {@link Activity}, which
  * defaults to an instance of {@link io.flutter.app.FlutterActivity}, itself a {@link
  * PluginRegistry}.
- *
- * <p>This class is now deprecated. See https://flutter.dev/go/android-project-migration for
- * migration details.
  */
 public interface PluginRegistry {
   /**
@@ -219,7 +216,7 @@ public interface PluginRegistry {
     /**
      * Adds a callback allowing the plugin to take part in handling incoming calls to {@code
      * Activity#onRequestPermissionsResult(int, String[], int[])} or {@code
-     * androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback#onRequestPermissionsResult(int,
+     * android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback#onRequestPermissionsResult(int,
      * String[], int[])}.
      *
      * <p>This registrar is for Flutter's v1 embedding. To listen for permission results in the v2

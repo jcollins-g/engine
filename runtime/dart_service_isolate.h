@@ -33,7 +33,8 @@ class DartServiceIsolate {
 
   // Returns a handle for the callback that can be used in
   // RemoveServerStatusCallback
-  [[nodiscard]] static CallbackHandle AddServerStatusCallback(
+  FML_WARN_UNUSED_RESULT
+  static CallbackHandle AddServerStatusCallback(
       const ObservatoryServerStateCallback& callback);
 
   // Accepts the handle returned by AddServerStatusCallback

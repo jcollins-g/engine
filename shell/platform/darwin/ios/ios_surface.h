@@ -9,12 +9,9 @@
 
 #include <memory>
 
-#include "flutter/flow/embedded_views.h"
 #include "flutter/fml/macros.h"
 #include "flutter/fml/platform/darwin/scoped_nsobject.h"
 #include "flutter/shell/common/surface.h"
-
-@class CALayer;
 
 namespace flutter {
 
@@ -22,21 +19,15 @@ namespace flutter {
 // mechanism which is still in a release preview.
 bool IsIosEmbeddedViewsPreviewEnabled();
 
-class IOSSurface : public ExternalViewEmbedder {
+class IOSSurface {
  public:
-  static std::unique_ptr<IOSSurface> Create(
-      std::shared_ptr<IOSContext> context,
-      fml::scoped_nsobject<CALayer> layer,
-      FlutterPlatformViewsController* platform_views_controller);
+  IOSSurface(FlutterPlatformViewsController* platform_views_controller);
 
-  // |ExternalViewEmbedder|
   virtual ~IOSSurface();
 
-  std::shared_ptr<IOSContext> GetContext() const;
-
-  ExternalViewEmbedder* GetExternalViewEmbedderIfEnabled();
-
   virtual bool IsValid() const = 0;
+
+  virtual bool ResourceContextMakeCurrent() = 0;
 
   virtual void UpdateStorageSizeIfNecessary() = 0;
 
@@ -45,39 +36,14 @@ class IOSSurface : public ExternalViewEmbedder {
   // will be used.
   //
   // If a GrContext is supplied, creates a secondary surface.
-  virtual std::unique_ptr<Surface> CreateGPUSurface(GrContext* gr_context = nullptr) = 0;
+  virtual std::unique_ptr<Surface> CreateGPUSurface(
+      GrContext* gr_context = nullptr) = 0;
 
  protected:
-  IOSSurface(std::shared_ptr<IOSContext> ios_context,
-             FlutterPlatformViewsController* platform_views_controller);
+  FlutterPlatformViewsController* GetPlatformViewsController();
 
  private:
-  std::shared_ptr<IOSContext> ios_context_;
   FlutterPlatformViewsController* platform_views_controller_;
-
-  // |ExternalViewEmbedder|
-  SkCanvas* GetRootCanvas() override;
-
-  // |ExternalViewEmbedder|
-  void CancelFrame() override;
-
-  // |ExternalViewEmbedder|
-  void BeginFrame(SkISize frame_size, GrContext* context, double device_pixel_ratio) override;
-  // |ExternalViewEmbedder|
-  void PrerollCompositeEmbeddedView(int view_id,
-                                    std::unique_ptr<flutter::EmbeddedViewParams> params) override;
-
-  // |ExternalViewEmbedder|
-  PostPrerollResult PostPrerollAction(fml::RefPtr<fml::GpuThreadMerger> gpu_thread_merger) override;
-
-  // |ExternalViewEmbedder|
-  std::vector<SkCanvas*> GetCurrentCanvases() override;
-
-  // |ExternalViewEmbedder|
-  SkCanvas* CompositeEmbeddedView(int view_id) override;
-
-  // |ExternalViewEmbedder|
-  bool SubmitFrame(GrContext* context) override;
 
  public:
   FML_DISALLOW_COPY_AND_ASSIGN(IOSSurface);

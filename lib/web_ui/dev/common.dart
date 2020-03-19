@@ -48,7 +48,6 @@ abstract class PlatformBinding {
   int getChromeBuild(YamlMap chromeLock);
   String getChromeDownloadUrl(String version);
   String getFirefoxDownloadUrl(String version);
-  String getFirefoxDownloadFilename(String version);
   String getChromeExecutablePath(io.Directory versionDir);
   String getFirefoxExecutablePath(io.Directory versionDir);
   String getFirefoxLatestVersionUrl();
@@ -76,12 +75,7 @@ class _WindowsBinding implements PlatformBinding {
 
   @override
   String getFirefoxDownloadUrl(String version) =>
-      'https://download-installer.cdn.mozilla.net/pub/firefox/releases/${version}/win64/en-US/'
-          '${getFirefoxDownloadFilename(version)}';
-
-  @override
-  String getFirefoxDownloadFilename(String version) =>
-      'firefox-${version}.exe';
+      'https://download-installer.cdn.mozilla.net/pub/firefox/releases/${version}/win64/en-US/firefox-${version}.exe';
 
   @override
   String getFirefoxExecutablePath(io.Directory versionDir) =>
@@ -116,12 +110,7 @@ class _LinuxBinding implements PlatformBinding {
 
   @override
   String getFirefoxDownloadUrl(String version) =>
-      'https://download-installer.cdn.mozilla.net/pub/firefox/releases/${version}/linux-x86_64/en-US/'
-          '${getFirefoxDownloadFilename(version)}';
-
-  @override
-  String getFirefoxDownloadFilename(String version) =>
-      'firefox-${version}.tar.bz2';
+      'https://download-installer.cdn.mozilla.net/pub/firefox/releases/${version}/linux-x86_64/en-US/firefox-${version}.tar.bz2';
 
   @override
   String getFirefoxExecutablePath(io.Directory versionDir) =>
@@ -161,16 +150,12 @@ class _MacBinding implements PlatformBinding {
 
   @override
   String getFirefoxDownloadUrl(String version) =>
-    'https://download-installer.cdn.mozilla.net/pub/firefox/releases/${version}/mac/en-US/'
-        '${getFirefoxDownloadFilename(version)}';
+      'https://download-installer.cdn.mozilla.net/pub/firefox/releases/${version}/mac/en-US/firefox-${version}.dmg';
 
   @override
-  String getFirefoxDownloadFilename(String version) =>
-      'Firefox ${version}.dmg';
-
-  @override
-  String getFirefoxExecutablePath(io.Directory versionDir) =>
-    path.join(versionDir.path, 'Firefox.app','Contents','MacOS', 'firefox');
+  String getFirefoxExecutablePath(io.Directory versionDir) {
+    throw UnimplementedError();
+  }
 
   @override
   String getFirefoxLatestVersionUrl() =>

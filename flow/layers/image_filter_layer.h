@@ -21,7 +21,6 @@ class ImageFilterLayer : public ContainerLayer {
 
  private:
   sk_sp<SkImageFilter> filter_;
-  SkRect child_paint_bounds_;
 
   FML_DISALLOW_COPY_AND_ASSIGN(ImageFilterLayer);
 };

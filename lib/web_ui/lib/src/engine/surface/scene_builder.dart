@@ -50,15 +50,6 @@ class SurfaceSceneBuilder implements ui.SceneBuilder {
     return surface;
   }
 
-  /// Adds [surface] to the surface tree.
-  ///
-  /// This is used by tests.
-  void debugAddSurface(PersistedSurface surface) {
-    if (assertionsEnabled) {
-      _addSurface(surface);
-    }
-  }
-
   void _addSurface(PersistedSurface surface) {
     _adoptSurface(surface);
   }
@@ -253,7 +244,6 @@ class SurfaceSceneBuilder implements ui.SceneBuilder {
     ui.Clip clipBehavior = ui.Clip.none,
     ui.PhysicalShapeEngineLayer oldLayer,
   }) {
-    assert(color != null, 'color must not be null');
     return _pushSurface(PersistedPhysicalShape(
       oldLayer,
       path,

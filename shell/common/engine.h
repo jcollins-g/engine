@@ -342,7 +342,8 @@ class Engine final : public RuntimeDelegate, PointerDataDispatcher::Delegate {
   ///
   /// @return     The result of the call to run the root isolate.
   ///
-  [[nodiscard]] RunStatus Run(RunConfiguration configuration);
+  FML_WARN_UNUSED_RESULT
+  RunStatus Run(RunConfiguration configuration);
 
   //----------------------------------------------------------------------------
   /// @brief      Tears down an existing root isolate, reuses the components of
@@ -361,7 +362,8 @@ class Engine final : public RuntimeDelegate, PointerDataDispatcher::Delegate {
   /// @return     Whether the restart was successful. If not, the engine and its
   ///             shell must be discarded.
   ///
-  [[nodiscard]] bool Restart(RunConfiguration configuration);
+  FML_WARN_UNUSED_RESULT
+  bool Restart(RunConfiguration configuration);
 
   //----------------------------------------------------------------------------
   /// @brief      Updates the asset manager referenced by the root isolate of a

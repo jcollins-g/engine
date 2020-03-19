@@ -47,20 +47,18 @@ class Firefox extends Browser {
       // https://developer.mozilla.org/en-US/docs/Mozilla/Command_Line_Options#Browser
       //
       var dir = createTempDir();
-      bool isMac = Platform.isMacOS;
       var args = [
         url.toString(),
         '--headless',
         '-width $kMaxScreenshotWidth',
         '-height $kMaxScreenshotHeight',
-        isMac ? '--new-window' : '-new-window',
-        isMac ? '--new-instance' : '-new-instance',
+        '-new-window',
+        '-new-instance',
         '--start-debugger-server $kDevtoolsPort',
       ];
 
       final Process process =
-          await Process.start(installation.executable, args,
-            workingDirectory: dir);
+          await Process.start(installation.executable, args);
 
       remoteDebuggerCompleter.complete(
           getRemoteDebuggerUrl(Uri.parse('http://localhost:$kDevtoolsPort')));

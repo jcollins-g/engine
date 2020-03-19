@@ -26,7 +26,6 @@
 #import "flutter/shell/platform/darwin/ios/framework/Source/platform_message_response_darwin.h"
 #import "flutter/shell/platform/darwin/ios/ios_surface.h"
 #import "flutter/shell/platform/darwin/ios/platform_view_ios.h"
-#include "flutter/shell/platform/darwin/ios/rendering_api_selection.h"
 
 NSString* const FlutterDefaultDartEntrypoint = nil;
 
@@ -223,10 +222,6 @@ NSString* const FlutterDefaultDartEntrypoint = nil;
   } else {
     self.flutterViewControllerWillDeallocObserver = nil;
   }
-}
-
-- (void)attachView {
-  self.iosPlatformView->attachView();
 }
 
 - (void)setFlutterViewControllerWillDeallocObserver:(id<NSObject>)observer {
@@ -428,7 +423,7 @@ NSString* const FlutterDefaultDartEntrypoint = nil;
   }
 
   const auto threadLabel = [NSString stringWithFormat:@"%@.%zu", _labelPrefix, shellCount++];
-
+  FML_DLOG(INFO) << "Creating threadHost for " << threadLabel.UTF8String;
   // The current thread will be used as the platform thread. Ensure that the message loop is
   // initialized.
   fml::MessageLoop::EnsureInitializedForCurrentThread();
@@ -442,8 +437,7 @@ NSString* const FlutterDefaultDartEntrypoint = nil;
   // synchronous.
   flutter::Shell::CreateCallback<flutter::PlatformView> on_create_platform_view =
       [](flutter::Shell& shell) {
-        return std::make_unique<flutter::PlatformViewIOS>(
-            shell, flutter::GetRenderingAPIForProcess(), shell.GetTaskRunners());
+        return std::make_unique<flutter::PlatformViewIOS>(shell, shell.GetTaskRunners());
       };
 
   flutter::Shell::CreateCallback<flutter::Rasterizer> on_create_rasterizer =

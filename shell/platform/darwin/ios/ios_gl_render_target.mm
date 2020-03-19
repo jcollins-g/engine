@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "flutter/shell/platform/darwin/ios/ios_render_target_gl.h"
+#include "flutter/shell/platform/darwin/ios/ios_gl_render_target.h"
 
 #include <UIKit/UIKit.h>
 
@@ -12,19 +12,20 @@
 
 namespace flutter {
 
-IOSRenderTargetGL::IOSRenderTargetGL(fml::scoped_nsobject<CAEAGLLayer> layer,
-                                     fml::scoped_nsobject<EAGLContext> context,
-                                     fml::scoped_nsobject<EAGLContext> resource_context)
+IOSGLRenderTarget::IOSGLRenderTarget(fml::scoped_nsobject<CAEAGLLayer> layer,
+                                     EAGLContext* context,
+                                     EAGLContext* resource_context)
     : layer_(std::move(layer)),
-      context_(std::move(context)),
-      resource_context_(std::move(resource_context)) {
+      context_([context retain]),
+      resource_context_([resource_context retain]),
+      framebuffer_(GL_NONE),
+      colorbuffer_(GL_NONE),
+      storage_size_width_(0),
+      storage_size_height_(0),
+      valid_(false) {
   FML_DCHECK(layer_ != nullptr);
   FML_DCHECK(context_ != nullptr);
   FML_DCHECK(resource_context_ != nullptr);
-
-  if (@available(iOS 9.0, *)) {
-    [layer_ setPresentsWithTransaction:YES];
-  }
 
   bool context_current = [EAGLContext setCurrentContext:context_];
 
@@ -60,7 +61,7 @@ IOSRenderTargetGL::IOSRenderTargetGL(fml::scoped_nsobject<CAEAGLLayer> layer,
   valid_ = true;
 }
 
-IOSRenderTargetGL::~IOSRenderTargetGL() {
+IOSGLRenderTarget::~IOSGLRenderTarget() {
   EAGLContext* context = EAGLContext.currentContext;
   [EAGLContext setCurrentContext:context_];
   FML_DCHECK(glGetError() == GL_NO_ERROR);
@@ -73,18 +74,11 @@ IOSRenderTargetGL::~IOSRenderTargetGL() {
   [EAGLContext setCurrentContext:context];
 }
 
-// |IOSRenderTarget|
-bool IOSRenderTargetGL::IsValid() const {
+bool IOSGLRenderTarget::IsValid() const {
   return valid_;
 }
 
-// |IOSRenderTarget|
-intptr_t IOSRenderTargetGL::GetFramebuffer() const {
-  return framebuffer_;
-}
-
-// |IOSRenderTarget|
-bool IOSRenderTargetGL::PresentRenderBuffer() const {
+bool IOSGLRenderTarget::PresentRenderBuffer() const {
   const GLenum discards[] = {
       GL_DEPTH_ATTACHMENT,
       GL_STENCIL_ATTACHMENT,
@@ -93,23 +87,20 @@ bool IOSRenderTargetGL::PresentRenderBuffer() const {
   glDiscardFramebufferEXT(GL_FRAMEBUFFER, sizeof(discards) / sizeof(GLenum), discards);
 
   glBindRenderbuffer(GL_RENDERBUFFER, colorbuffer_);
-  auto current_context = [EAGLContext currentContext];
-  FML_DCHECK(current_context != nullptr);
-  return [current_context presentRenderbuffer:GL_RENDERBUFFER];
+  return [[EAGLContext currentContext] presentRenderbuffer:GL_RENDERBUFFER];
 }
 
-// |IOSRenderTarget|
-bool IOSRenderTargetGL::UpdateStorageSizeIfNecessary() {
+bool IOSGLRenderTarget::UpdateStorageSizeIfNecessary() {
   const CGSize layer_size = [layer_.get() bounds].size;
   const CGFloat contents_scale = layer_.get().contentsScale;
   const GLint size_width = layer_size.width * contents_scale;
   const GLint size_height = layer_size.height * contents_scale;
 
   if (size_width == storage_size_width_ && size_height == storage_size_height_) {
-    // Nothing to do since the storage size is already consistent with the layer.
+    // Nothing to since the stoage size is already consistent with the layer.
     return true;
   }
-  TRACE_EVENT_INSTANT0("flutter", "IOSRenderTargetGL::UpdateStorageSizeIfNecessary");
+  TRACE_EVENT_INSTANT0("flutter", "IOSGLRenderTarget::UpdateStorageSizeIfNecessary");
   FML_DLOG(INFO) << "Updating render buffer storage size.";
 
   FML_DCHECK(glGetError() == GL_NO_ERROR);
@@ -139,6 +130,14 @@ bool IOSRenderTargetGL::UpdateStorageSizeIfNecessary() {
   FML_DCHECK(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
 
   return true;
+}
+
+bool IOSGLRenderTarget::MakeCurrent() {
+  return UpdateStorageSizeIfNecessary() && [EAGLContext setCurrentContext:context_.get()];
+}
+
+bool IOSGLRenderTarget::ResourceMakeCurrent() {
+  return [EAGLContext setCurrentContext:resource_context_.get()];
 }
 
 }  // namespace flutter

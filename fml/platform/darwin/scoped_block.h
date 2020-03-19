@@ -72,7 +72,7 @@ class ScopedBlock {
     block_ = temp;
   }
 
-  [[nodiscard]] B release() {
+  B release() FML_WARN_UNUSED_RESULT {
     B temp = block_;
     block_ = nullptr;
     return temp;

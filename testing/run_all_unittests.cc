@@ -6,7 +6,6 @@
 #include <optional>
 #include <string>
 
-#include "flutter/fml/backtrace.h"
 #include "flutter/fml/build_config.h"
 #include "flutter/fml/command_line.h"
 #include "flutter/testing/debugger_detection.h"
@@ -36,7 +35,6 @@ std::optional<fml::TimeDelta> GetTestTimeoutFromArgs(int argc, char** argv) {
 }
 
 int main(int argc, char** argv) {
-  fml::InstallCrashHandler();
 #ifdef OS_IOS
   asl_log_descriptor(NULL, NULL, ASL_LEVEL_NOTICE, STDOUT_FILENO,
                      ASL_LOG_DESCRIPTOR_WRITE);

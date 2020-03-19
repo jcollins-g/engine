@@ -52,7 +52,7 @@ source_set("dart") {
   ]
 
   public_deps = [
-    ":testing_lib",
+    ":testing",
     "//flutter/common",
     "//flutter/runtime",
     "//flutter/runtime:libdart",

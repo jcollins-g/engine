@@ -338,7 +338,8 @@ bool DartIsolate::LoadKernel(std::shared_ptr<const fml::Mapping> mapping,
   return true;
 }
 
-[[nodiscard]] bool DartIsolate::PrepareForRunningFromKernel(
+FML_WARN_UNUSED_RESULT
+bool DartIsolate::PrepareForRunningFromKernel(
     std::shared_ptr<const fml::Mapping> mapping,
     bool last_piece) {
   TRACE_EVENT0("flutter", "DartIsolate::PrepareForRunningFromKernel");
@@ -404,7 +405,8 @@ bool DartIsolate::LoadKernel(std::shared_ptr<const fml::Mapping> mapping,
   return true;
 }
 
-[[nodiscard]] bool DartIsolate::PrepareForRunningFromKernels(
+FML_WARN_UNUSED_RESULT
+bool DartIsolate::PrepareForRunningFromKernels(
     std::vector<std::shared_ptr<const fml::Mapping>> kernels) {
   const auto count = kernels.size();
   if (count == 0) {
@@ -421,7 +423,8 @@ bool DartIsolate::LoadKernel(std::shared_ptr<const fml::Mapping> mapping,
   return true;
 }
 
-[[nodiscard]] bool DartIsolate::PrepareForRunningFromKernels(
+FML_WARN_UNUSED_RESULT
+bool DartIsolate::PrepareForRunningFromKernels(
     std::vector<std::unique_ptr<const fml::Mapping>> kernels) {
   std::vector<std::shared_ptr<const fml::Mapping>> shared_kernels;
   for (auto& kernel : kernels) {
@@ -457,9 +460,9 @@ bool DartIsolate::MarkIsolateRunnable() {
   return true;
 }
 
-[[nodiscard]] static bool InvokeMainEntrypoint(
-    Dart_Handle user_entrypoint_function,
-    Dart_Handle args) {
+FML_WARN_UNUSED_RESULT
+static bool InvokeMainEntrypoint(Dart_Handle user_entrypoint_function,
+                                 Dart_Handle args) {
   if (tonic::LogIfError(user_entrypoint_function)) {
     FML_LOG(ERROR) << "Could not resolve main entrypoint function.";
     return false;
@@ -485,9 +488,10 @@ bool DartIsolate::MarkIsolateRunnable() {
 }
 
 /// @note Procedure doesn't copy all closures.
-[[nodiscard]] bool DartIsolate::Run(const std::string& entrypoint_name,
-                                    const std::vector<std::string>& args,
-                                    const fml::closure& on_run) {
+FML_WARN_UNUSED_RESULT
+bool DartIsolate::Run(const std::string& entrypoint_name,
+                      const std::vector<std::string>& args,
+                      const fml::closure& on_run) {
   TRACE_EVENT0("flutter", "DartIsolate::Run");
   if (phase_ != Phase::Ready) {
     return false;
@@ -513,11 +517,11 @@ bool DartIsolate::MarkIsolateRunnable() {
 }
 
 /// @note Procedure doesn't copy all closures.
-[[nodiscard]] bool DartIsolate::RunFromLibrary(
-    const std::string& library_name,
-    const std::string& entrypoint_name,
-    const std::vector<std::string>& args,
-    const fml::closure& on_run) {
+FML_WARN_UNUSED_RESULT
+bool DartIsolate::RunFromLibrary(const std::string& library_name,
+                                 const std::string& entrypoint_name,
+                                 const std::vector<std::string>& args,
+                                 const fml::closure& on_run) {
   TRACE_EVENT0("flutter", "DartIsolate::RunFromLibrary");
   if (phase_ != Phase::Ready) {
     return false;

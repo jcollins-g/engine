@@ -26,8 +26,8 @@ AutoIsolateShutdown::~AutoIsolateShutdown() {
   latch.Wait();
 }
 
-[[nodiscard]] bool AutoIsolateShutdown::RunInIsolateScope(
-    std::function<bool(void)> closure) {
+FML_WARN_UNUSED_RESULT
+bool AutoIsolateShutdown::RunInIsolateScope(std::function<bool(void)> closure) {
   if (!IsValid()) {
     return false;
   }

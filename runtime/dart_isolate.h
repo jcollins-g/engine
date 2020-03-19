@@ -241,7 +241,8 @@ class DartIsolate : public UIDartState {
   /// @return     Whether the isolate was prepared and the described phase
   ///             transition made.
   ///
-  [[nodiscard]] bool PrepareForRunningFromPrecompiledCode();
+  FML_WARN_UNUSED_RESULT
+  bool PrepareForRunningFromPrecompiledCode();
 
   //----------------------------------------------------------------------------
   /// @brief      Prepare the isolate for running for a a list of kernel files.
@@ -264,9 +265,9 @@ class DartIsolate : public UIDartState {
   /// @return     If the kernel mapping supplied was successfully used to
   ///             prepare the isolate.
   ///
-  [[nodiscard]] bool PrepareForRunningFromKernel(
-      std::shared_ptr<const fml::Mapping> kernel,
-      bool last_piece = true);
+  FML_WARN_UNUSED_RESULT
+  bool PrepareForRunningFromKernel(std::shared_ptr<const fml::Mapping> kernel,
+                                   bool last_piece = true);
 
   //----------------------------------------------------------------------------
   /// @brief      Prepare the isolate for running for a a list of kernel files.
@@ -283,7 +284,8 @@ class DartIsolate : public UIDartState {
   /// @return     If the kernel mappings supplied were successfully used to
   ///             prepare the isolate.
   ///
-  [[nodiscard]] bool PrepareForRunningFromKernels(
+  FML_WARN_UNUSED_RESULT
+  bool PrepareForRunningFromKernels(
       std::vector<std::shared_ptr<const fml::Mapping>> kernels);
 
   //----------------------------------------------------------------------------
@@ -301,7 +303,8 @@ class DartIsolate : public UIDartState {
   /// @return     If the kernel mappings supplied were successfully used to
   ///             prepare the isolate.
   ///
-  [[nodiscard]] bool PrepareForRunningFromKernels(
+  FML_WARN_UNUSED_RESULT
+  bool PrepareForRunningFromKernels(
       std::vector<std::unique_ptr<const fml::Mapping>> kernels);
 
   //----------------------------------------------------------------------------
@@ -320,9 +323,10 @@ class DartIsolate : public UIDartState {
   /// @return     If the isolate successfully transitioned to the running phase
   ///             and the main entrypoint was invoked.
   ///
-  [[nodiscard]] bool Run(const std::string& entrypoint,
-                         const std::vector<std::string>& args,
-                         const fml::closure& on_run = nullptr);
+  FML_WARN_UNUSED_RESULT
+  bool Run(const std::string& entrypoint,
+           const std::vector<std::string>& args,
+           const fml::closure& on_run = nullptr);
 
   //----------------------------------------------------------------------------
   /// @brief      Transition the root isolate to the `Phase::Running` phase and
@@ -342,10 +346,11 @@ class DartIsolate : public UIDartState {
   /// @return     If the isolate successfully transitioned to the running phase
   ///             and the main entrypoint was invoked.
   ///
-  [[nodiscard]] bool RunFromLibrary(const std::string& library_name,
-                                    const std::string& entrypoint,
-                                    const std::vector<std::string>& args,
-                                    const fml::closure& on_run = nullptr);
+  FML_WARN_UNUSED_RESULT
+  bool RunFromLibrary(const std::string& library_name,
+                      const std::string& entrypoint,
+                      const std::vector<std::string>& args,
+                      const fml::closure& on_run = nullptr);
 
   //----------------------------------------------------------------------------
   /// @brief      Transition the isolate to the `Phase::Shutdown` phase. The
@@ -353,7 +358,8 @@ class DartIsolate : public UIDartState {
   ///
   /// @return     If the isolate succesfully transitioned to the shutdown phase.
   ///
-  [[nodiscard]] bool Shutdown();
+  FML_WARN_UNUSED_RESULT
+  bool Shutdown();
 
   //----------------------------------------------------------------------------
   /// @brief      Registers a callback that will be invoked in isolate scope
@@ -412,17 +418,19 @@ class DartIsolate : public UIDartState {
               std::string advisory_script_uri,
               std::string advisory_script_entrypoint,
               bool is_root_isolate);
-  [[nodiscard]] bool Initialize(Dart_Isolate isolate);
+  FML_WARN_UNUSED_RESULT bool Initialize(Dart_Isolate isolate);
 
   void SetMessageHandlingTaskRunner(fml::RefPtr<fml::TaskRunner> runner);
 
   bool LoadKernel(std::shared_ptr<const fml::Mapping> mapping, bool last_piece);
 
-  [[nodiscard]] bool LoadLibraries();
+  FML_WARN_UNUSED_RESULT
+  bool LoadLibraries();
 
   bool UpdateThreadPoolNames() const;
 
-  [[nodiscard]] bool MarkIsolateRunnable();
+  FML_WARN_UNUSED_RESULT
+  bool MarkIsolateRunnable();
 
   void OnShutdownCallback();
 

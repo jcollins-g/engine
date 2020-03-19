@@ -8,10 +8,4 @@
 
 set -e
 
-sudo apt -y install libfreetype6-dev \
-                    libgl-dev        \
-                    libx11-dev       \
-                    libxcursor-dev   \
-                    libxinerama-dev  \
-                    libxrandr-dev    \
-                    libxxf86vm-dev
+sudo apt-get -y install libx11-dev

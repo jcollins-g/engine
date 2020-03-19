@@ -356,11 +356,6 @@ abstract class PersistedPicture extends PersistedLeafSurface {
 
   EngineCanvas _canvas;
 
-  /// Returns the canvas used by this picture layer.
-  ///
-  /// Useful for tests.
-  EngineCanvas get debugCanvas => _canvas;
-
   final double dx;
   final double dy;
   final EnginePicture picture;
@@ -629,7 +624,7 @@ abstract class PersistedPicture extends PersistedLeafSurface {
     super.debugValidate(validationErrors);
 
     if (picture.recordingCanvas.didDraw) {
-      if (debugCanvas == null) {
+      if (_canvas == null) {
         validationErrors
             .add('$runtimeType has non-trivial picture but it has null canvas');
       }
